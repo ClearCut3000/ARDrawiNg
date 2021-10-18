@@ -40,8 +40,6 @@ class ViewController: UIViewController {
       let minimumDistanceSquare = (lastNode.boundingBox.max.x * lastNode.boundingBox.max.x) + (lastNode.boundingBox.max.y * lastNode.boundingBox.max.y) + (lastNode.boundingBox.max.z * lastNode.boundingBox.max.z)
       print(minimumDistanceSquare)
 
-//      let minimumDistanceSquare = minimumDistance * minimumDistance
-
       guard minimumDistanceSquare < distanceSquare else { return }
     }
 
@@ -88,9 +86,6 @@ class ViewController: UIViewController {
 
   // Last node, placed by user
   var lastNode: SCNNode?
-
-  // Minimum distance between objects placed when moving
-  let minimumDistance: Float = 0.05
 
   /// The node for an object currently selected by user
   var selectedNode: SCNNode?
