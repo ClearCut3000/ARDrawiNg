@@ -5,10 +5,7 @@
   },
   "resources" : [
     {
-      "filename" : "AAPL.arreferenceimage"
-    },
-    {
-      "filename" : "GF.arreferenceimage"
+      "filename" : "image1.arreferenceimage"
     }
   ]
 }

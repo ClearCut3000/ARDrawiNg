@@ -57,26 +57,27 @@
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RK5-mG-jKn">
-                                <rect key="frame" x="16" y="618" width="158" height="29"/>
+                                <rect key="frame" x="16" y="618" width="233" height="29"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="KaD-5l-R64">
-                                    <rect key="frame" x="0.0" y="0.0" width="158" height="29"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="233" height="29"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RAH-ye-saP">
-                                            <rect key="frame" x="0.0" y="0.0" width="158" height="29"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="233" height="29"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Ldw-TI-gOS">
-                                                <rect key="frame" x="0.0" y="0.0" width="158" height="29"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="233" height="29"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" apportionsSegmentWidthsByContent="YES" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jVE-nl-i8i">
-                                                        <rect key="frame" x="0.0" y="0.0" width="160" height="29"/>
+                                                        <rect key="frame" x="0.0" y="-1" width="233" height="32"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <segments>
                                                             <segment title="Freeform"/>
                                                             <segment title="Plane"/>
                                                             <segment title="Image"/>
+                                                            <segment title="Point"/>
                                                         </segments>
                                                         <color key="tintColor" systemColor="labelColor"/>
                                                         <connections>
@@ -92,7 +93,7 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="158" id="5d0-eI-fhj"/>
+                                    <constraint firstAttribute="width" constant="233" id="5d0-eI-fhj"/>
                                     <constraint firstAttribute="height" constant="29" id="WNC-pW-iAf"/>
                                 </constraints>
                                 <blurEffect style="light"/>

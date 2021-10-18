@@ -4,6 +4,7 @@ class ViewController: UIViewController {
 
   // MARK: - Outlets
   @IBOutlet var sceneView: ARSCNView!
+  @IBOutlet weak var unDoButton: UIButton!
 
   // MARK: - Properties
   /// Visualize planes
@@ -15,20 +16,13 @@ class ViewController: UIViewController {
 
   /// Adding node at user's point of tap.
   /// - Parameters:
-  ///   - node: node^ that must be added
+  ///   - node: node, that must be added
   ///   - point: point of user's touch
   func addNode(_ node: SCNNode, at point: CGPoint){
-    if #available(iOS 13, *){
-      guard let query = sceneView.raycastQuery(from: point, allowing: .estimatedPlane, alignment: .any) else { return }
-      guard let result = sceneView.session.raycast(query).first else { return }
-      node.simdTransform = result.worldTransform
-      addNodeToSceneRoot(node)
-    } else {
       guard let hitResult = sceneView.hitTest(point, types: .existingPlaneUsingExtent).first else { return }
       guard let anchor = hitResult.anchor as? ARPlaneAnchor, anchor.alignment == .horizontal else { return }
       node.simdTransform = hitResult.worldTransform
       addNodeToSceneRoot(node)
-    }
   }
 
   func addNode(_ node: SCNNode, to parentNode: SCNNode){
@@ -36,11 +30,18 @@ class ViewController: UIViewController {
     if let lastNode = lastNode {
       let lastPosition = lastNode.position
       let newPosition = node.position
+
       let x = lastPosition.x - newPosition.x
       let y = lastPosition.y - newPosition.y
       let z = lastPosition.z - newPosition.z
+
       let distanceSquare = x * x + y * y + z * z
-      let minimumDistanceSquare = minimumDistance * minimumDistance
+
+      let minimumDistanceSquare = (lastNode.boundingBox.max.x * lastNode.boundingBox.max.x) + (lastNode.boundingBox.max.y * lastNode.boundingBox.max.y) + (lastNode.boundingBox.max.z * lastNode.boundingBox.max.z)
+      print(minimumDistanceSquare)
+
+//      let minimumDistanceSquare = minimumDistance * minimumDistance
+
       guard minimumDistanceSquare < distanceSquare else { return }
     }
 
@@ -57,6 +58,32 @@ class ViewController: UIViewController {
     parentNode.addChildNode(clonedNode)
   }
 
+  func addToParent(_ node: SCNNode){
+    // Get poin of user's view position
+    guard let pointOfView = sceneView.pointOfView else { return }
+    let transform = pointOfView.transform
+
+    // Take position and orientation in vector
+    let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
+    let position = SCNVector3(transform.m41, transform.m42, transform.m43)
+
+    // Translate position to selected none
+    let currentPosition = plus(left: orientation, right: position)
+    selectedNode?.position = currentPosition
+
+    // Clone node to separate copies of object
+    let clonedNode = node.clone()
+
+    // Remember last placed node
+    lastNode = clonedNode
+
+    // Remember object plased for undo
+    objectsPlased.append(clonedNode)
+
+    // Add cloned node to scene
+    sceneView.scene.rootNode.addChildNode(clonedNode)
+  }
+
   let configuration = ARWorldTrackingConfiguration()
 
   // Last node, placed by user
@@ -69,7 +96,7 @@ class ViewController: UIViewController {
   var selectedNode: SCNNode?
 
   enum ObjectPlacementMode {
-    case freeform, plane, image
+    case freeform, plane, image, point
   }
 
   var objectMode: ObjectPlacementMode = .freeform
@@ -86,9 +113,9 @@ class ViewController: UIViewController {
   func addNodeInFront (_ node: SCNNode){
     // Get current camera's frame
     guard let frame = sceneView.session.currentFrame else { return }
+
     // Get transform property of camera
     let transform = frame.camera.transform
-
     var translation = matrix_identity_float4x4
 
     // Translate to 20 cm on z-axis
@@ -99,14 +126,18 @@ class ViewController: UIViewController {
     translation.columns.1.x = -1
     translation.columns.0.y = 1
     translation.columns.1.y = 0
+
     // Assign transform to the node
     node.simdTransform = matrix_multiply(transform, translation)
+
+    // Add node to the scene
+    addNodeToSceneRoot(node)
 
   }
 
   func addNodeToImage(_ node: SCNNode, at point: CGPoint) {
     guard let result = sceneView.hitTest(point, options: [:]).first else { return }
-    guard node.name == "image" else { return }
+    guard result.node.name == "image" else { return }
     node.transform = result.node.worldTransform
     node.eulerAngles.x = 0
     addNodeToSceneRoot(node)
@@ -114,9 +145,7 @@ class ViewController: UIViewController {
 
   func addNodeToSceneRoot(_ node: SCNNode){
     addNode(node, to: sceneView.scene.rootNode)
-
   }
-
 
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     super.touchesBegan(touches, with: event)
@@ -128,9 +157,15 @@ class ViewController: UIViewController {
     process(touches)
   }
 
+  func plus (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
+    // placing objects at the same distance from the user to SCNVector3
+    return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
+  }
+
   func process(_ touches: Set<UITouch>) {
     guard let touch = touches.first, let selectedNode = selectedNode else { return }
     let point = touch.location(in: sceneView)
+
     switch objectMode {
     case  .freeform:
       addNodeInFront(selectedNode)
@@ -138,8 +173,11 @@ class ViewController: UIViewController {
       addNodeToImage(selectedNode, at: point)
     case  .plane:
       addNode(selectedNode, at: point)
+    case .point:
+      addToParent(selectedNode)
     }
   }
+
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "showOptions" {
@@ -148,16 +186,32 @@ class ViewController: UIViewController {
     }
   }
 
-  func reloadConfiguration() {
+  func reloadConfiguration(reset: Bool = false) {
+    // Clear objects placed
+    objectsPlased.forEach { $0.removeFromParentNode() }
+    objectsPlased.removeAll()
+
+    // Clear planes placed
+    planeNodes.forEach { $0.removeFromParentNode() }
+    planeNodes.removeAll()
+
+    //Hide all future planes
+    arePlanesHidden = true
+
+    // Remove existing anchors if reset is true
+    let options: ARSession.RunOptions = reset ? .removeExistingAnchors : []
+
+    // Reload configuration
     configuration.detectionImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil)
     configuration.planeDetection = .horizontal
-    sceneView.session.run(configuration)
+    sceneView.session.run(configuration, options: options)
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
     sceneView.delegate = self
     sceneView.autoenablesDefaultLighting = true
+
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -182,10 +236,14 @@ class ViewController: UIViewController {
     case 2:
       objectMode = .image
       arePlanesHidden = true
+    case 3:
+      objectMode = .point
+      arePlanesHidden = true
     default:
       break
     }
   }
+
 }
 
 // MARK: - OptionsViewControllerDelegate
@@ -197,17 +255,23 @@ extension ViewController: OptionsViewControllerDelegate {
   }
 
   func togglePlaneVisualization() {
-    dismiss(animated: true, completion: nil)
+    dismiss(animated: true)
     guard objectMode == .plane else { return }
     arePlanesHidden.toggle()
   }
 
   func undoLastObject() {
-
+    if let lastObject = objectsPlased.last {
+      lastObject.removeFromParentNode()
+      objectsPlased.removeLast()
+    } else {
+dismiss(animated: true)
+    }
   }
 
   func resetScene() {
-    dismiss(animated: true, completion: nil)
+    reloadConfiguration(reset: true)
+    dismiss(animated: true)
   }
 }
 
