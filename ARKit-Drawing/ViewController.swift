@@ -18,14 +18,14 @@ class ViewController: UIViewController {
   /// - Parameters:
   ///   - node: node, that must be added
   ///   - point: point of user's touch
-  func addNode(_ node: SCNNode, at point: CGPoint){
-      guard let hitResult = sceneView.hitTest(point, types: .existingPlaneUsingExtent).first else { return }
-      guard let anchor = hitResult.anchor as? ARPlaneAnchor, anchor.alignment == .horizontal else { return }
-      node.simdTransform = hitResult.worldTransform
-      addNodeToSceneRoot(node)
+  private func addNode(_ node: SCNNode, at point: CGPoint){
+    guard let hitResult = sceneView.hitTest(point, types: .existingPlaneUsingExtent).first else { return }
+    guard let anchor = hitResult.anchor as? ARPlaneAnchor, anchor.alignment == .horizontal else { return }
+    node.simdTransform = hitResult.worldTransform
+    addNodeToSceneRoot(node)
   }
 
-  func addNode(_ node: SCNNode, to parentNode: SCNNode){
+  private func addNode(_ node: SCNNode, to parentNode: SCNNode){
     // Check that objects are not too close
     if let lastNode = lastNode {
       let lastPosition = lastNode.position
@@ -56,7 +56,7 @@ class ViewController: UIViewController {
     parentNode.addChildNode(clonedNode)
   }
 
-  func addToParent(_ node: SCNNode){
+  private func addToParent(_ node: SCNNode){
     // Get poin of user's view position
     guard let pointOfView = sceneView.pointOfView else { return }
     let transform = pointOfView.transform
@@ -82,13 +82,13 @@ class ViewController: UIViewController {
     sceneView.scene.rootNode.addChildNode(clonedNode)
   }
 
-  let configuration = ARWorldTrackingConfiguration()
+  private let configuration = ARWorldTrackingConfiguration()
 
   // Last node, placed by user
-  var lastNode: SCNNode?
+  private var lastNode: SCNNode?
 
   /// The node for an object currently selected by user
-  var selectedNode: SCNNode?
+  private var selectedNode: SCNNode?
 
   enum ObjectPlacementMode {
     case freeform, plane, image, point
@@ -105,7 +105,7 @@ class ViewController: UIViewController {
 
   // MARK: - Methods
   /// Add node in front of camera
-  func addNodeInFront (_ node: SCNNode){
+  private func addNodeInFront (_ node: SCNNode){
     // Get current camera's frame
     guard let frame = sceneView.session.currentFrame else { return }
 
@@ -130,7 +130,7 @@ class ViewController: UIViewController {
 
   }
 
-  func addNodeToImage(_ node: SCNNode, at point: CGPoint) {
+  private func addNodeToImage(_ node: SCNNode, at point: CGPoint) {
     guard let result = sceneView.hitTest(point, options: [:]).first else { return }
     guard result.node.name == "image" else { return }
     node.transform = result.node.worldTransform
@@ -138,7 +138,7 @@ class ViewController: UIViewController {
     addNodeToSceneRoot(node)
   }
 
-  func addNodeToSceneRoot(_ node: SCNNode){
+  private func addNodeToSceneRoot(_ node: SCNNode){
     addNode(node, to: sceneView.scene.rootNode)
   }
 
@@ -152,12 +152,12 @@ class ViewController: UIViewController {
     process(touches)
   }
 
-  func plus (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
+  private func plus (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
     // placing objects at the same distance from the user to SCNVector3
     return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
   }
 
-  func process(_ touches: Set<UITouch>) {
+  private func process(_ touches: Set<UITouch>) {
     guard let touch = touches.first, let selectedNode = selectedNode else { return }
     let point = touch.location(in: sceneView)
 
@@ -181,7 +181,7 @@ class ViewController: UIViewController {
     }
   }
 
-  func reloadConfiguration(reset: Bool = false) {
+  private func reloadConfiguration(reset: Bool = false) {
     // Clear objects placed
     objectsPlased.forEach { $0.removeFromParentNode() }
     objectsPlased.removeAll()
@@ -260,7 +260,7 @@ extension ViewController: OptionsViewControllerDelegate {
       lastObject.removeFromParentNode()
       objectsPlased.removeLast()
     } else {
-dismiss(animated: true)
+      dismiss(animated: true)
     }
   }
 
@@ -273,7 +273,7 @@ dismiss(animated: true)
 // MARK: - ARSCNViewDelegate
 extension ViewController: ARSCNViewDelegate{
 
-  func createFloor(with size: CGSize, opacity: CGFloat = 0.25) -> SCNNode{
+  private func createFloor(with size: CGSize, opacity: CGFloat = 0.25) -> SCNNode{
     // Get estimated plane size
     let  plane = SCNPlane(width: size.width, height: size.height)
     plane.firstMaterial?.diffuse.contents = UIColor.green
@@ -283,7 +283,7 @@ extension ViewController: ARSCNViewDelegate{
     return planeNode
   }
 
-  func nodeAdded(_ node: SCNNode, for anchor: ARImageAnchor){
+  private func nodeAdded(_ node: SCNNode, for anchor: ARImageAnchor){
     // Put plane at the image
     let size = anchor.referenceImage.physicalSize
     let coverNode = createFloor(with: size, opacity: 0.1)
@@ -291,7 +291,7 @@ extension ViewController: ARSCNViewDelegate{
     node.addChildNode(coverNode)
   }
 
-  func nodeAdded(_ node: SCNNode, for anchor: ARPlaneAnchor){
+  private func nodeAdded(_ node: SCNNode, for anchor: ARPlaneAnchor){
     let extent = anchor.extent
     let size = CGSize(width: CGFloat(extent.x), height: CGFloat(extent.z))
     let planeNode = createFloor(with: size)
@@ -323,7 +323,7 @@ extension ViewController: ARSCNViewDelegate{
     }
   }
 
-  func updateFloor(for node: SCNNode, anchor: ARPlaneAnchor) {
+  private func updateFloor(for node: SCNNode, anchor: ARPlaneAnchor) {
     guard let planeNode = node.childNodes.first, let plane = planeNode.geometry as? SCNPlane else { return }
     // Get estimated plane size
     let extent = anchor.extent
