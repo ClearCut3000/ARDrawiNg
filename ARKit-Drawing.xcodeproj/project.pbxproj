@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		36613729271E0B3000ABF5BF /* Screenshots in Resources */ = {isa = PBXBuildFile; fileRef = 36613728271E0B3000ABF5BF /* Screenshots */; };
+		36D8270B2721D3D2004D81CD /* models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 36D8270A2721D3D2004D81CD /* models.scnassets */; };
 		5519DC5720238B6000B1008D /* OptionSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5519DC5620238B6000B1008D /* OptionSelectorViewController.swift */; };
 		BE618F32203E31B8005EC6F1 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE618F31203E31B8005EC6F1 /* UIViewController+Extensions.swift */; };
 		BE915EAB20105C1D00A251FD /* OptionsContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE915EAA20105C1D00A251FD /* OptionsContainerViewController.swift */; };
 		BEDB2EDA200EABAD001C6BBC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEDB2ED9200EABAD001C6BBC /* AppDelegate.swift */; };
-		BEDB2EDC200EABAD001C6BBC /* models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = BEDB2EDB200EABAD001C6BBC /* models.scnassets */; };
 		BEDB2EDE200EABAD001C6BBC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEDB2EDD200EABAD001C6BBC /* ViewController.swift */; };
 		BEDB2EE1200EABAD001C6BBC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BEDB2EDF200EABAD001C6BBC /* Main.storyboard */; };
 		BEDB2EE3200EABAD001C6BBC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BEDB2EE2200EABAD001C6BBC /* Assets.xcassets */; };
@@ -23,12 +23,12 @@
 
 /* Begin PBXFileReference section */
 		36613728271E0B3000ABF5BF /* Screenshots */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Screenshots; sourceTree = SOURCE_ROOT; };
+		36D8270A2721D3D2004D81CD /* models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = models.scnassets; sourceTree = "<group>"; };
 		5519DC5620238B6000B1008D /* OptionSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectorViewController.swift; sourceTree = "<group>"; };
 		BE618F31203E31B8005EC6F1 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		BE915EAA20105C1D00A251FD /* OptionsContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsContainerViewController.swift; sourceTree = "<group>"; };
 		BEDB2ED6200EABAD001C6BBC /* ARKit-Drawing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ARKit-Drawing.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEDB2ED9200EABAD001C6BBC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BEDB2EDB200EABAD001C6BBC /* models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = models.scnassets; sourceTree = "<group>"; };
 		BEDB2EDD200EABAD001C6BBC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		BEDB2EE0200EABAD001C6BBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BEDB2EE2200EABAD001C6BBC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -73,8 +73,8 @@
 				BEDB2EDD200EABAD001C6BBC /* ViewController.swift */,
 				BEDB2EEF200ECC4C001C6BBC /* BasicShape.swift */,
 				BEDB2EDF200EABAD001C6BBC /* Main.storyboard */,
+				36D8270A2721D3D2004D81CD /* models.scnassets */,
 				BEDB2EF1200ECF14001C6BBC /* Options */,
-				BEDB2EDB200EABAD001C6BBC /* models.scnassets */,
 				BEDB2EE2200EABAD001C6BBC /* Assets.xcassets */,
 				BEDB2EE4200EABAD001C6BBC /* LaunchScreen.storyboard */,
 				BEDB2EE7200EABAD001C6BBC /* Info.plist */,
@@ -153,8 +153,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEDB2EDC200EABAD001C6BBC /* models.scnassets in Resources */,
 				BEDB2EEE200ECB94001C6BBC /* Options.storyboard in Resources */,
+				36D8270B2721D3D2004D81CD /* models.scnassets in Resources */,
 				BEDB2EE6200EABAD001C6BBC /* LaunchScreen.storyboard in Resources */,
 				BEDB2EE3200EABAD001C6BBC /* Assets.xcassets in Resources */,
 				36613729271E0B3000ABF5BF /* Screenshots in Resources */,
